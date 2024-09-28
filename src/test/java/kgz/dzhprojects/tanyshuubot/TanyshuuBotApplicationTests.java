@@ -1,4 +1,4 @@
-package kgz.dzhprojects.TanyshuuBot;
+package kgz.dzhprojects.tanyshuubot;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

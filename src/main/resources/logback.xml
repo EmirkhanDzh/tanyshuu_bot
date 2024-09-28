@@ -4,7 +4,7 @@
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%d [%thread] %-5level  %logger{35} - %msg%n</pattern>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} MDC=%X{user} - %msg%n</pattern>
     </encoder>
   </appender>
 
@@ -28,6 +28,7 @@
 
   <logger name="debug/tanyshuuBot" level="debug" additivity="false">
     <appender-ref ref="FILE-ROLLING"/>
+<!--    <appender-ref ref="STDOUT"/>-->
   </logger>
 
   <root level="error">
@@ -39,5 +40,10 @@
     <appender-ref ref="FILE-ROLLING"/>
     <appender-ref ref="STDOUT"/>
   </root>
+
+<!--  <root level="debug">-->
+<!--    <appender-ref ref="FILE-ROLLING"/>-->
+<!--    <appender-ref ref="STDOUT"/>-->
+<!--  </root>-->
 
 </configuration>

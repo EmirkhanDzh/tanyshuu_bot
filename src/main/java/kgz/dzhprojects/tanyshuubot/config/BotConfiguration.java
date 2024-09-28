@@ -1,4 +1,4 @@
-package kgz.dzhprojects.TanyshuuBot.config;
+package kgz.dzhprojects.tanyshuubot.config;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

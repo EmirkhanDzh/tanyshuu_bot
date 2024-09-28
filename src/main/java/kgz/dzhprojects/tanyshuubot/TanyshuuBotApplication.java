@@ -1,4 +1,4 @@
-package kgz.dzhprojects.TanyshuuBot;
+package kgz.dzhprojects.tanyshuubot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
