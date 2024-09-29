@@ -32,18 +32,18 @@ public class User {
 
     @Override
     public String toString() {
-        return "\nid=" + id +
-                "\nname=" + name +
-                "\nlikesSport=" + getAnswerOnRussian(likesSport) +
-                "\nlikesReading=" + getAnswerOnRussian(likesReading) +
-                "\nlikesActiveRest=" + getAnswerOnRussian(likesActiveRest) +
-                "\nlikesAnimals=" + getAnswerOnRussian(likesAnimals) +
-                "\nlikesMoviesAndSeries=" + getAnswerOnRussian(likesMoviesAndSeries) +
-                "\nlikesNewsAndPolitics=" + getAnswerOnRussian(likesNewsAndPolitics) +
-                "\nlikesStudy=" + getAnswerOnRussian(likesStudy) +
-                "\nlikesWalking=" + getAnswerOnRussian(likesWalking) +
-                "\nlikesToEat=" + getAnswerOnRussian(likesToEat) +
-                "\nlikesToCook=" + getAnswerOnRussian(likesToCook);
+        return "\nИдентификатор = " + id +
+                "\nИмя = @" + name +
+                "\nЛюбит спорт = " + getAnswerOnRussian(likesSport) +
+                "\nЛюбит чтение = " + getAnswerOnRussian(likesReading) +
+                "\nЛюбит активный отдых = " + getAnswerOnRussian(likesActiveRest) +
+                "\nЛюбит животных = " + getAnswerOnRussian(likesAnimals) +
+                "\nЛюбит просмотр сериалов и фильмов = " + getAnswerOnRussian(likesMoviesAndSeries) +
+                "\nЛюбит быть в курсе всех новостей и всей политики = " + getAnswerOnRussian(likesNewsAndPolitics) +
+                "\nЛюбит учиться и развиваться = " + getAnswerOnRussian(likesStudy) +
+                "\nЛюбит выходит на спокойные прогулки = " + getAnswerOnRussian(likesWalking) +
+                "\nЛюбит вкусно покушать = " + getAnswerOnRussian(likesToEat) +
+                "\nЛюбит готовить = " + getAnswerOnRussian(likesToCook);
     }
 
     private String getAnswerOnRussian(Boolean answrTrue) {
