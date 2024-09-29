@@ -33,7 +33,7 @@ public class User {
     @Override
     public String toString() {
         return "\nid=" + id +
-                "\nname='" + name +
+                "\nname=" + name +
                 "\nlikesSport=" + getAnswerOnRussian(likesSport) +
                 "\nlikesReading=" + getAnswerOnRussian(likesReading) +
                 "\nlikesActiveRest=" + getAnswerOnRussian(likesActiveRest) +
