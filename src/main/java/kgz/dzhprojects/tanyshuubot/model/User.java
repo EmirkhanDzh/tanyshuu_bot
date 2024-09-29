@@ -153,8 +153,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "\nидентификатор = " + id + "\n" +
-                "телеграм = @" + name + "\n" +
+        return "\nтелеграм: @" + name + "\n" +
                 getAnswerOnRussian(likesSport) + "любит спорт" + "\n" +
                 getAnswerOnRussian(likesReading) + "любит чтение" + "\n" +
                 getAnswerOnRussian(likesActiveRest) + "любит активный отдых" + "\n" +

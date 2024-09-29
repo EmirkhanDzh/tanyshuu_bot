@@ -332,6 +332,7 @@ class BotCommandService(
             """.trimIndent()
 
         val responseMessage = SendMessage(chatId.toString(), firstResponseText)
+        responseMessage.parseMode = ParseMode.HTML
         val markupLine = InlineKeyboardMarkup()
         val rowsInline: MutableList<MutableList<InlineKeyboardButton>> = mutableListOf()
         val rowInline: MutableList<InlineKeyboardButton> = mutableListOf()
@@ -463,7 +464,8 @@ class BotCommandService(
             <b>/start</b> - приветствие и описание бота
                 
             <b>/add_or_edit_my_data</b> - добавить ваши пользовательские данные, чтобы можно было найти совместимых пользователей.
-            если данные уже есть, то при желании вы их также можете обновить
+            если данные уже есть, то при желании вы их также можете обновить.
+            если пользователя не было на момент нажатия кнопки, то создастся пользователь-болавнка. 
 
             <b>/show_my_data</b> - посмотреть свои пользовательские данные. если данных нет, то их надо бы завести
                 
