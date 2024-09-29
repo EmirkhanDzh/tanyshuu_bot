@@ -1,8 +1,11 @@
 package kgz.dzhprojects.tanyshuubot.enum
 
-enum class BotCommandsEnum(val command: String, val description: String) {
+enum class BotCommandEnum(
+    val command: String,
+    val description: String,
+) {
     START("/start", "посмотреть описание бота"),
-    ADD_MY_DATE("/add_my_data", "добавить ваши пользовательские данные"),
+    ADD_MY_DATA("/add_my_data", "добавить ваши пользовательские данные"),
     GET_MY_DATA("/get_my_data", "посмотреть ваши пользовательские данные"),
     UPDATE_MY_DATA("/update_my_data", "поменять ваши пользовательские данные"),
     DELETE_MY_DATA("/delete_my_data", "удалить ваши пользовательские данные"),
