@@ -3,9 +3,6 @@ package kgz.dzhprojects.tanyshuubot.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
@@ -19,55 +16,43 @@ public class User {
     private boolean likesReading;
     private boolean likesActiveRest;
     private boolean likesAnimals;
-    private boolean likesMoviesAndSeries;
-    private boolean likesNewsAndPolitics;
+    private boolean likesMoviesSeries;
+    private boolean likesNewsPolitics;
     private boolean likesStudy;
     private boolean likesWalking;
     private boolean likesToEat;
+    private boolean likesToCook;
 
     public User(long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "\nИдентификатор = " + id +
-                "\nИмя = @" + name +
-                "\nЛюбит спорт = " + getAnswerOnRussian(likesSport) +
-                "\nЛюбит чтение = " + getAnswerOnRussian(likesReading) +
-                "\nЛюбит активный отдых = " + getAnswerOnRussian(likesActiveRest) +
-                "\nЛюбит животных = " + getAnswerOnRussian(likesAnimals) +
-                "\nЛюбит просмотр сериалов и фильмов = " + getAnswerOnRussian(likesMoviesAndSeries) +
-                "\nЛюбит быть в курсе всех новостей и всей политики = " + getAnswerOnRussian(likesNewsAndPolitics) +
-                "\nЛюбит учиться и развиваться = " + getAnswerOnRussian(likesStudy) +
-                "\nЛюбит выходит на спокойные прогулки = " + getAnswerOnRussian(likesWalking) +
-                "\nЛюбит вкусно покушать = " + getAnswerOnRussian(likesToEat) +
-                "\nЛюбит готовить = " + getAnswerOnRussian(likesToCook);
+    public User() {
+        likesSport = false;
+        likesReading = false;
+        likesActiveRest = false;
+        likesAnimals = false;
+        likesMoviesSeries = false;
+        likesNewsPolitics = false;
+        likesStudy = false;
+        likesWalking = false;
+        likesToEat = false;
     }
 
-    private String getAnswerOnRussian(Boolean answrTrue) {
-        if (answrTrue) {
-            return "Да";
-        } else {
-            return "Нет";
-        }
-
-    }
-
-    private boolean likesToCook = false;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id && likesSport == user.likesSport && likesReading == user.likesReading && likesActiveRest == user.likesActiveRest && likesAnimals == user.likesAnimals && likesMoviesAndSeries == user.likesMoviesAndSeries && likesNewsAndPolitics == user.likesNewsAndPolitics && likesStudy == user.likesStudy && likesWalking == user.likesWalking && likesToEat == user.likesToEat && likesToCook == user.likesToCook && Objects.equals(name, user.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, likesSport, likesReading, likesActiveRest, likesAnimals, likesMoviesAndSeries, likesNewsAndPolitics, likesStudy, likesWalking, likesToEat, likesToCook);
+    public User(long id, String name, boolean likesSport, boolean likesReading, boolean likesActiveRest, boolean likesAnimals, boolean likesMoviesSeries, boolean likesNewsPolitics, boolean likesStudy, boolean likesWalking, boolean likesToEat, boolean likesToCook) {
+        this.id = id;
+        this.name = name;
+        this.likesSport = likesSport;
+        this.likesReading = likesReading;
+        this.likesActiveRest = likesActiveRest;
+        this.likesAnimals = likesAnimals;
+        this.likesMoviesSeries = likesMoviesSeries;
+        this.likesNewsPolitics = likesNewsPolitics;
+        this.likesStudy = likesStudy;
+        this.likesWalking = likesWalking;
+        this.likesToEat = likesToEat;
+        this.likesToCook = likesToCook;
     }
 
     public long getId() {
@@ -118,20 +103,20 @@ public class User {
         this.likesAnimals = likesAnimals;
     }
 
-    public boolean isLikesMoviesAndSeries() {
-        return likesMoviesAndSeries;
+    public boolean isLikesMoviesSeries() {
+        return likesMoviesSeries;
     }
 
-    public void setLikesMoviesAndSeries(boolean likesMoviesAndSeries) {
-        this.likesMoviesAndSeries = likesMoviesAndSeries;
+    public void setLikesMoviesSeries(boolean likesMoviesAndSeries) {
+        this.likesMoviesSeries = likesMoviesAndSeries;
     }
 
-    public boolean isLikesNewsAndPolitics() {
-        return likesNewsAndPolitics;
+    public boolean isLikesNewsPolitics() {
+        return likesNewsPolitics;
     }
 
-    public void setLikesNewsAndPolitics(boolean likesNewsAndPolitics) {
-        this.likesNewsAndPolitics = likesNewsAndPolitics;
+    public void setLikesNewsPolitics(boolean likesNewsAndPolitics) {
+        this.likesNewsPolitics = likesNewsAndPolitics;
     }
 
     public boolean isLikesStudy() {
@@ -166,30 +151,42 @@ public class User {
         this.likesToCook = likesToCook;
     }
 
-    public User() {
-        likesSport = false;
-        likesReading = false;
-        likesActiveRest = false;
-        likesAnimals = false;
-        likesMoviesAndSeries = false;
-        likesNewsAndPolitics = false;
-        likesStudy = false;
-        likesWalking = false;
-        likesToEat = false;
+    @Override
+    public String toString() {
+        return "\nидентификатор = " + id + "\n" +
+                "телеграм = @" + name + "\n" +
+                getAnswerOnRussian(likesSport) + "любит спорт" + "\n" +
+                getAnswerOnRussian(likesReading) + "любит чтение" + "\n" +
+                getAnswerOnRussian(likesActiveRest) + "любит активный отдых" + "\n" +
+                getAnswerOnRussian(likesAnimals) + "любит животных" + "\n" +
+                getAnswerOnRussian(likesMoviesSeries) + "любит просмотр сериалов и фильмов" + "\n" +
+                getAnswerOnRussian(likesNewsPolitics) + "любит быть в курсе всех новостей и всей политики" + "\n" +
+                getAnswerOnRussian(likesStudy) + "любит учиться и развиваться" + "\n" +
+                getAnswerOnRussian(likesWalking) + "любит выходит на спокойные прогулки" + "\n" +
+                getAnswerOnRussian(likesToEat) + "любит вкусно покушать" + "\n" +
+                getAnswerOnRussian(likesToCook) + "любит готовить";
     }
 
-    public User(long id, String name, boolean likesSport, boolean likesReading, boolean likesActiveRest, boolean likesAnimals, boolean likesMoviesAndSeries, boolean likesNewsAndPolitics, boolean likesStudy, boolean likesWalking, boolean likesToEat, boolean likesToCook) {
-        this.id = id;
-        this.name = name;
-        this.likesSport = likesSport;
-        this.likesReading = likesReading;
-        this.likesActiveRest = likesActiveRest;
-        this.likesAnimals = likesAnimals;
-        this.likesMoviesAndSeries = likesMoviesAndSeries;
-        this.likesNewsAndPolitics = likesNewsAndPolitics;
-        this.likesStudy = likesStudy;
-        this.likesWalking = likesWalking;
-        this.likesToEat = likesToEat;
-        this.likesToCook = likesToCook;
+    private String getAnswerOnRussian(Boolean answrTrue) {
+        if (answrTrue) {
+            return "";
+        } else {
+            return "не ";
+        }
+
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && likesSport == user.likesSport && likesReading == user.likesReading && likesActiveRest == user.likesActiveRest && likesAnimals == user.likesAnimals && likesMoviesSeries == user.likesMoviesSeries && likesNewsPolitics == user.likesNewsPolitics && likesStudy == user.likesStudy && likesWalking == user.likesWalking && likesToEat == user.likesToEat && likesToCook == user.likesToCook && Objects.equals(name, user.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, likesSport, likesReading, likesActiveRest, likesAnimals, likesMoviesSeries, likesNewsPolitics, likesStudy, likesWalking, likesToEat, likesToCook);
+    }
+
 }

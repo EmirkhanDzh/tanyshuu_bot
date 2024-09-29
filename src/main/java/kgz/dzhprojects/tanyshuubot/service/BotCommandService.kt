@@ -6,6 +6,7 @@ import kgz.dzhprojects.tanyshuubot.enum.InterestCallbackEnum
 import kgz.dzhprojects.tanyshuubot.model.User
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
+import org.telegram.telegrambots.meta.api.methods.ParseMode
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage
@@ -52,7 +53,13 @@ class BotCommandService(
             when (messageText) {
                 BotCommandEnum.START.command -> start(chat)
 
-                BotCommandEnum.ADD_MY_DATA.command -> addMyData(chat)
+                BotCommandEnum.ADD_OR_EDIT_MY_DATA.command -> addOrEditMyData(chat)
+
+                BotCommandEnum.SHOW_MY_DATA.command -> showMyData(chat)
+
+                BotCommandEnum.DELETE_MY_DATA.command -> deleteMyData(chat)
+
+                BotCommandEnum.SHOW_COMPATIBLE_USERS.command -> showCompatibleUsers(chat)
 
                 BotCommandEnum.HELP.command -> help(chat)
 
@@ -60,7 +67,6 @@ class BotCommandService(
             }
         } else {
             if (update.hasCallbackQuery()) {
-                System.err.println("call back handler section begin")
                 val callbackData = update.callbackQuery.data
                 val messageId = update.callbackQuery.message.messageId.toLong()
                 val chatId = update.callbackQuery.message.chatId
@@ -146,7 +152,7 @@ class BotCommandService(
                             user.isLikesReading,
                             user.isLikesActiveRest,
                             user.isLikesAnimals,
-                            user.isLikesMoviesAndSeries,
+                            user.isLikesMoviesSeries,
                             true
                         )
                         showQuestion(chatId, messageId, InterestCallbackEnum.STUDY)
@@ -159,7 +165,7 @@ class BotCommandService(
                             user.isLikesReading,
                             user.isLikesActiveRest,
                             user.isLikesAnimals,
-                            user.isLikesMoviesAndSeries,
+                            user.isLikesMoviesSeries,
                             false
                         )
                         showQuestion(chatId, messageId, InterestCallbackEnum.STUDY)
@@ -172,8 +178,8 @@ class BotCommandService(
                             user.isLikesReading,
                             user.isLikesActiveRest,
                             user.isLikesAnimals,
-                            user.isLikesMoviesAndSeries,
-                            user.isLikesNewsAndPolitics,
+                            user.isLikesMoviesSeries,
+                            user.isLikesNewsPolitics,
                             true
                         )
                         showQuestion(chatId, messageId, InterestCallbackEnum.WALKING)
@@ -186,8 +192,8 @@ class BotCommandService(
                             user.isLikesReading,
                             user.isLikesActiveRest,
                             user.isLikesAnimals,
-                            user.isLikesMoviesAndSeries,
-                            user.isLikesNewsAndPolitics,
+                            user.isLikesMoviesSeries,
+                            user.isLikesNewsPolitics,
                             false
                         )
                         showQuestion(chatId, messageId, InterestCallbackEnum.WALKING)
@@ -200,8 +206,8 @@ class BotCommandService(
                             user.isLikesReading,
                             user.isLikesActiveRest,
                             user.isLikesAnimals,
-                            user.isLikesMoviesAndSeries,
-                            user.isLikesNewsAndPolitics,
+                            user.isLikesMoviesSeries,
+                            user.isLikesNewsPolitics,
                             user.isLikesStudy,
                             true
                         )
@@ -215,8 +221,8 @@ class BotCommandService(
                             user.isLikesReading,
                             user.isLikesActiveRest,
                             user.isLikesAnimals,
-                            user.isLikesMoviesAndSeries,
-                            user.isLikesNewsAndPolitics,
+                            user.isLikesMoviesSeries,
+                            user.isLikesNewsPolitics,
                             user.isLikesStudy,
                             false
                         )
@@ -230,8 +236,8 @@ class BotCommandService(
                             user.isLikesReading,
                             user.isLikesActiveRest,
                             user.isLikesAnimals,
-                            user.isLikesMoviesAndSeries,
-                            user.isLikesNewsAndPolitics,
+                            user.isLikesMoviesSeries,
+                            user.isLikesNewsPolitics,
                             user.isLikesStudy,
                             user.isLikesWalking,
                             true
@@ -246,8 +252,8 @@ class BotCommandService(
                             user.isLikesReading,
                             user.isLikesActiveRest,
                             user.isLikesAnimals,
-                            user.isLikesMoviesAndSeries,
-                            user.isLikesNewsAndPolitics,
+                            user.isLikesMoviesSeries,
+                            user.isLikesNewsPolitics,
                             user.isLikesStudy,
                             user.isLikesWalking,
                             false
@@ -262,8 +268,8 @@ class BotCommandService(
                             user.isLikesReading,
                             user.isLikesActiveRest,
                             user.isLikesAnimals,
-                            user.isLikesMoviesAndSeries,
-                            user.isLikesNewsAndPolitics,
+                            user.isLikesMoviesSeries,
+                            user.isLikesNewsPolitics,
                             user.isLikesStudy,
                             user.isLikesWalking,
                             user.isLikesToEat,
@@ -280,8 +286,8 @@ class BotCommandService(
                             user.isLikesReading,
                             user.isLikesActiveRest,
                             user.isLikesAnimals,
-                            user.isLikesMoviesAndSeries,
-                            user.isLikesNewsAndPolitics,
+                            user.isLikesMoviesSeries,
+                            user.isLikesNewsPolitics,
                             user.isLikesStudy,
                             user.isLikesWalking,
                             user.isLikesToEat,
@@ -291,55 +297,38 @@ class BotCommandService(
                         showDataSettingResult(chatId, messageId, user = user)
                     }
                 }
-
-                System.err.println("call back handler section end")
             } else {
-                logger.warn("невалидный ввод")
+                logger.warn("Невалидный ввод")
             }
         }
     }
 
-    private fun showDataSettingResult(
-        chatId: Long,
-        messageId: Long,
-        user: User? = null,
-    ) {
-        executeDeleteMessage(chatId, messageId)
-        user?.isLikesToCook
-        val text =
-            """
-                Успешно добавлены данные для пользователя ${user?.name} :
-                
-            ${user.toString()}
+    private fun start(chat: Chat) {
+        val chatId = chat.id
+        val firstName = chat.firstName
+        val responseText = """
+            Приветствую, <b>$firstName</b>!
+            
+            Я помогу найти людей в сервисе, которые совместимы с Вами на основании Ваших пользовательских данных
+            
+            Для анализа совместимости мне требуются Ваши данные
+            
+            Чтобы их добавить, воспользуйтесь командой <b>/add_or_edit_my_data</b>
+            
+            А также можете ознакомиться со подробным описанием всех команд с помощью <b>/help</b>
             """.trimIndent()
-
-        executeSendMessage(chatId, text)
+        executeSendMessage(chatId, responseText)
     }
 
-    private fun showQuestion(
-        chatId: Long,
-        messageId: Long,
-        interestCallbackEnum: InterestCallbackEnum,
-    ) {
-
-        val text = interestCallbackEnum.question
-        executeEditMessageText(text, chatId, messageId, interestCallbackEnum)
-    }
-
-    private fun executeDeleteMessage(chatId: Long, messageId: Long) {
-        val messageToDelete = DeleteMessage()
-        messageToDelete.chatId = chatId.toString()
-        messageToDelete.messageId = messageId.toInt()
-        bot.execute(messageToDelete)
-    }
-
-    private fun addMyData(chat: Chat) {
+    private fun addOrEditMyData(chat: Chat) {
         val chatId = chat.id
         val firstName = chat.firstName
         val userName = chat.userName
         userService.saveUser(chatId, userName)
         val firstResponseText = """
-            Отлично, $firstName! Добавим твои данные для того, чтобы мы могли показать совместимых с тобою пользователей?
+            Отлично, <b>$firstName</b>!
+            
+            Готовы добавить данные, чтобы можно было проанализировать совместимость с другими пользователями?
             """.trimIndent()
 
         val responseMessage = SendMessage(chatId.toString(), firstResponseText)
@@ -359,42 +348,190 @@ class BotCommandService(
         } catch (e: TelegramApiException) {
             logger.error("Возникла ошибка при отправке сообщения пользователю: " + e.message)
         }
+    }
 
-/*        logger.info { "$firstName начал добавление своих данных в сервис" }
-        // sendMessage(chatId, firstResponseText)
-        val user = User(chatId, userName)
+    private fun showMyData(chat: Chat) {
+        val chatId = chat.id
+        val user = userService.getUser(chatId)
+        val userNotFoundMessage = """
+            Ваших данных нет в сервисе
+            
+            Чтобы их добавить, воспользуйтесь командой <b>/add_or_edit_my_data</b>
+        """.trimIndent()
+        user?.let {
+            executeSendMessage(chatId, user.toString())
+        } ?: executeSendMessage(chatId, userNotFoundMessage)
+    }
 
-        InterestCallbackEnum.values().forEach {
-            System.err.println("loop for ${it.name}")
-            System.err.println("chatId = ${userName}")
-            val responseMessage = SendMessage(chatId.toString(), it.question)
-            val markupLine = InlineKeyboardMarkup()
-            val rowsInline: MutableList<MutableList<InlineKeyboardButton>> = mutableListOf()
-            val rowInline: MutableList<InlineKeyboardButton> = mutableListOf()
-            val yesButton = InlineKeyboardButton().apply {
-                this.text = YES
-                this.callbackData = it.yes
-            }
-            val noButton = InlineKeyboardButton().apply {
-                this.text = NO
-                this.callbackData = it.no
-            }
-            rowInline.add(yesButton)
-            rowInline.add(noButton)
-            rowsInline.add(rowInline)
-            markupLine.keyboard = rowsInline
-            responseMessage.replyMarkup = markupLine
-            try {
-                bot.execute(responseMessage)
-            } catch (e: TelegramApiException) {
-                logger.error("Возникла ошибка при отправке сообщения пользователю: " + e.message)
-            }
-            System.err.println("end of loop for ${it.name}")
+    private fun deleteMyData(chat: Chat) {
+        val chatId = chat.id
+        val userName = chat.userName
+        val user = userService.getUser(chatId)
+        var messageToSend = ""
+        if (user != null) {
+            userService.removeUser(chatId)
+            messageToSend = "<b>$userName</b>, Ваши пользовательские данные  успешно удалены"
+            executeSendMessage(chatId, messageToSend)
+        } else {
+            messageToSend = "Ваших данных итак нет в сервисе"
+            executeSendMessage(chatId, messageToSend)
+        }
+    }
+
+    private fun showCompatibleUsers(chat: Chat) {
+        val chatId = chat.id
+        val user = userService.getUser(chatId)
+        var messageToSend = ""
+        if (user == null) {
+            messageToSend = """
+                У Вас отсутствуют данные для поиска совместимых пользователей
+                
+                Чтобы их добавить, воспользуйтесь командой <b>/add_or_edit_my_data</b>
+            """.trimIndent()
+            executeSendMessage(chatId, messageToSend)
+            return
         }
 
-        //userService.saveUser(777777, "Pasha", true)
+        messageToSend = "<b>По спортивному интересу:\n</b>"
+        var usersByInterest = getUsersNames(user.id, user.isLikesSport, InterestCallbackEnum.SPORT)
+        usersByInterest.forEach {
+            messageToSend += it + "\n"
+        }
 
-        logger.info { "$firstName закончил добавление своих данных в сервис" }*/
+        messageToSend += "<b>\nПо читательскому интересу:\n</b>"
+        usersByInterest = getUsersNames(user.id, user.isLikesReading, InterestCallbackEnum.READING)
+        usersByInterest.forEach {
+            messageToSend += it + "\n"
+        }
+
+        messageToSend += "<b>\nПо активному отдыху:\n</b>"
+        usersByInterest = getUsersNames(user.id, user.isLikesActiveRest, InterestCallbackEnum.ACTIVE_REST)
+        usersByInterest.forEach {
+            messageToSend += it + "\n"
+        }
+
+        messageToSend += "<b>\nПо любви к животным:\n</b>"
+        usersByInterest = getUsersNames(user.id, user.isLikesAnimals, InterestCallbackEnum.ANIMALS)
+        usersByInterest.forEach {
+            messageToSend += it + "\n"
+        }
+
+        messageToSend += "<b>\nПо любви к сериалам и фильмам:\n</b>"
+        usersByInterest = getUsersNames(user.id, user.isLikesMoviesSeries, InterestCallbackEnum.MOVIES_AND_SERIES)
+        usersByInterest.forEach {
+            messageToSend += it + "\n"
+        }
+
+        messageToSend += "<b>\nПо интересу к новостям и политике:\n</b>"
+        usersByInterest = getUsersNames(user.id, user.isLikesNewsPolitics, InterestCallbackEnum.NEWS_AND_POLITICS)
+        usersByInterest.forEach {
+            messageToSend += it + "\n"
+        }
+
+        messageToSend += "<b>\nПо желанию у учебе и саморазвитию:\n</b>"
+        usersByInterest = getUsersNames(user.id, user.isLikesStudy, InterestCallbackEnum.STUDY)
+        usersByInterest.forEach {
+            messageToSend += it + "\n"
+        }
+
+        messageToSend += "<b>\nПо интересу к легким прогулкам:\n</b>"
+        usersByInterest = getUsersNames(user.id, user.isLikesWalking, InterestCallbackEnum.WALKING)
+        usersByInterest.forEach {
+            messageToSend += it + "\n"
+        }
+
+        messageToSend += "<b>\nПо любви вкусно покушать:\n</b>"
+        usersByInterest = getUsersNames(user.id, user.isLikesToEat, InterestCallbackEnum.EAT)
+        usersByInterest.forEach {
+            messageToSend += it + "\n"
+        }
+
+        messageToSend += "<b>\nПо интересу готовки:\n</b>"
+        usersByInterest = getUsersNames(user.id, user.isLikesToCook, InterestCallbackEnum.COOK)
+        usersByInterest.forEach {
+            messageToSend += it + "\n"
+        }
+
+        executeSendMessage(chatId, messageToSend)
+    }
+
+    private fun help(chat: Chat) {
+        val chatId = chat.id
+        val responseText = """
+            Подробное описание каждой команды:
+            
+            <b>/start</b> - приветствие и описание бота
+                
+            <b>/add_or_edit_my_data</b> - добавить ваши пользовательские данные, чтобы можно было найти совместимых пользователей.
+            если данные уже есть, то при желании вы их также можете обновить
+
+            <b>/show_my_data</b> - посмотреть свои пользовательские данные. если данных нет, то их надо бы завести
+                
+            <b>/delete_my_data</b> - удалить свои пользовательские данные. если данные не были заведены, то команда ни к чему не приведет
+                
+            <b>/show_compatible_users</b> - показать совместимых пользователей на основании ваших данных
+                
+            <b>/help</b> - подробная информация по командам 
+            """.trimIndent()
+        executeSendMessage(chatId, responseText)
+    }
+
+    private fun isValidMessage(update: Update) = update.let {
+        it.hasMessage() && it.message.hasText()
+    }
+
+    private fun buildListOfCommands() = BotCommandEnum.values().map {
+        BotCommand(it.command, it.description)
+    }
+
+    private fun showDataSettingResult(
+        chatId: Long,
+        messageId: Long,
+        user: User? = null,
+    ) {
+        executeDeleteMessage(chatId, messageId)
+        user?.isLikesToCook
+        val text =
+            """
+                Успешно добавлены данные для пользователя <b>${user?.name}</b>:
+                
+            ${user.toString()}
+            """.trimIndent()
+
+        executeSendMessage(chatId, text)
+    }
+
+    private fun getUsersNames(userId: Long, likes: Boolean, interestCallbackEnum: InterestCallbackEnum) = if (likes) {
+        userService.getUsersByInterest(likes, interestCallbackEnum).map {
+            if (userId != it.id) {
+                "- @" + it.name
+            } else {
+                ""
+            }
+        }.filter {
+            it.isNotEmpty()
+        }.ifEmpty {
+            listOf("<i>Никто не нашелся</i>")
+        }
+    } else {
+        listOf("<i>Вы этим не интересуетесь</i>")
+    }
+
+    private fun showQuestion(
+        chatId: Long,
+        messageId: Long,
+        interestCallbackEnum: InterestCallbackEnum,
+    ) {
+
+        val text = interestCallbackEnum.question
+        executeEditMessageText(text, chatId, messageId, interestCallbackEnum)
+    }
+
+    private fun executeDeleteMessage(chatId: Long, messageId: Long) {
+        val messageToDelete = DeleteMessage()
+        messageToDelete.chatId = chatId.toString()
+        messageToDelete.messageId = messageId.toInt()
+        bot.execute(messageToDelete)
     }
 
     private fun executeEditMessageText(
@@ -430,49 +567,9 @@ class BotCommandService(
         }
     }
 
-    private fun isValidMessage(update: Update) = update.let {
-        it.hasMessage() && it.message.hasText()
-    }
-
-    private fun buildListOfCommands() = BotCommandEnum.values().map {
-        BotCommand(it.command, it.description)
-    }
-
-    private fun start(chat: Chat) {
-        val chatId = chat.id
-        val firstName = chat.firstName
-        val responseText = """
-            Привет, $firstName!
-            Этот бот поможет тебе найти людей, которые совместимы с тобой на основании твоих пользовательских данных.
-            """.trimIndent()
-        System.err.println("chatId :: $chatId")
-        executeSendMessage(chatId, responseText)
-    }
-
-    private fun help(chat: Chat) {
-        val chatId = chat.id
-        val responseText = """
-            Подробное описание каждой команды:
-            
-            /start - посмотреть описание бота
-                
-            /add_my_data - добавить ваши пользовательские данные, чтобы бот мог найти совместимых пользователей
-                
-            /get_my_data - посмотреть ваши пользовательские данные
-                
-            /update_my_data - поменять ваши пользовательские данные
-                
-            /delete_my_data - удалить ваши пользовательские данные
-                
-            /show_compatible_users - показать совместимых пользователей на основании ваших данных
-                
-            /help - узнать подробности про каждую команду
-            """.trimIndent()
-        executeSendMessage(chatId, responseText)
-    }
-
     private fun executeSendMessage(chatId: Long, responseText: String) {
         val responseMessage = SendMessage(chatId.toString(), responseText)
+        responseMessage.parseMode = ParseMode.HTML
         try {
             bot.execute(responseMessage)
         } catch (e: TelegramApiException) {
